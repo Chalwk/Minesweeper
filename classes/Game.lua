@@ -362,14 +362,14 @@ end
 
 function Game:drawCells()
     local numberColors = {
-        [1] = { 0.2, 0.4, 1 }, -- Blue
+        [1] = { 0.2, 0.4, 1 },   -- Blue
         [2] = { 0.2, 0.7, 0.2 }, -- Green
-        [3] = { 1, 0.2, 0.2 }, -- Red
+        [3] = { 1, 0.2, 0.2 },   -- Red
         [4] = { 0.4, 0.2, 0.8 }, -- Purple
         [5] = { 0.8, 0.2, 0.2 }, -- Dark Red
         [6] = { 0.2, 0.8, 0.8 }, -- Cyan
-        [7] = { 0, 0, 0 },     -- Black
-        [8] = { 0.5, 0.5, 0.5 } -- Gray
+        [7] = { 0, 0, 0 },       -- Black
+        [8] = { 0.5, 0.5, 0.5 }  -- Gray
     }
 
     local font = love.graphics.newFont(math_floor(self.cellSize * 0.6))
@@ -401,7 +401,7 @@ function Game:drawCells()
                 love.graphics.setLineWidth(1)
             end
 
-            -- Cell content (rest of the method remains the same)
+            -- Cell content
             if cell.revealed then
                 if cell.mine then
                     love.graphics.setColor(1, 0.2, 0.2)
@@ -415,10 +415,31 @@ function Game:drawCells()
                 end
             elseif cell.flagged then
                 love.graphics.setColor(1, 0.8, 0.2)
+
+                -- Dimensions
+                local poleWidth = self.cellSize * 0.1
+                local poleHeight = self.cellSize * 0.6
+                local flagWidth = self.cellSize * 0.35
+                local flagHeight = self.cellSize * 0.25
+
+                -- Offset to move everything slightly left
+                local offset = self.cellSize * 0.1
+
+                -- Pole coordinates
+                local poleX = x + self.cellSize / 2 - poleWidth / 2 - offset
+                local poleY = y + self.cellSize / 2 - poleHeight / 2
+
+                -- Draw pole
+                love.graphics.rectangle("fill", poleX, poleY, poleWidth, poleHeight)
+
+                -- Flag coordinates (triangular flag)
+                local flagX = poleX + poleWidth
+                local flagY = poleY
+
                 love.graphics.polygon("fill",
-                    x + self.cellSize / 2, y + self.cellSize / 4,
-                    x + self.cellSize / 4, y + 3 * self.cellSize / 4,
-                    x + 3 * self.cellSize / 4, y + 3 * self.cellSize / 4
+                    flagX, flagY,                              -- Top-left of flag
+                    flagX + flagWidth, flagY + flagHeight / 2, -- Tip of flag
+                    flagX, flagY + flagHeight                  -- Bottom-left of flag
                 )
             end
 
